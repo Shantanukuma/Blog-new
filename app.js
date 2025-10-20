@@ -60,5 +60,5 @@ app.get("/", async (req, res) => {
 app.use("/user", userRoute);
 app.use("/blog", blogRoute);
 
-// app.listen(PORT, () => console.log(`Server is listening at port ${PORT}`));
+app.listen(PORT, () => console.log(`Server is listening at port ${PORT}`));
 module.exports = app
