@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title>HomePage</title>
+    <style>
+      body {
+        padding-top: 75px; /* Adjust if navbar height changes */
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <!-- <%= JSON.stringify(blogs) %> -->
+    <div class="container mt-5">
+      <div class="row justify-content-center g-4">
+        <% blogs.forEach(blog => { %>
+        <div class="col-md-3 col-sm-6 d-flex justify-content-center">
+          <div class="card shadow-lg border-0 rounded-4" style="width: 18rem">
+            <img
+              src="<%= blog.coverImageURL %>"
+              class="card-img-top rounded-top-4"
+              alt="Blog Cover"
+              style="height: 200px; object-fit: cover"
+            />
+            <div class="card-body text-center">
+              <h5 class="card-title fw-bold text-primary"><%= blog.title %></h5>
+              <p
+                class="card-text text-muted"
+                style="height: 80px; overflow: hidden; text-overflow: ellipsis"
+              >
+                <%= blog.body %>
+              </p>
+              <a
+                href="/blog/<%= blog._id %>"
+                class="btn btn-outline-primary btn-sm px-4 mt-2"
+              >
+                View Blog
+              </a>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <%- include('./partials/script') %>
+  </body>
+</html>

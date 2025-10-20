@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title>HomePage</title>
+    <style>
+      body {
+        padding-top: 75px; /* Adjust if navbar height changes */
+      }
+    </style>
+    
+  </head>
+  
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="container mt-3">
+      <form action="/blog" method="post" enctype="multipart/form-data">
+        <div class="form-group mt-4">
+          <label for="coverImage">Cover image</label>
+          <input
+            name="coverImageURL"
+            type="file"
+            class="form-control"
+            id="coverImageURL"
+            placeholder="coverImageURL"
+          />
+        </div>
+        <div class="form-group mb-3 mt-3">
+          <label for="title">Title</label>
+          <input
+            name="title"
+            type="text"
+            class="form-control"
+            id="title"
+            aria-describedby="title"
+            placeholder="Enter title of Blog"
+          />
+        </div>
+        <div class="form-group mt-4">
+          <label for="floatingTextarea">Body</label>
+          
+          <textarea name="body" id="body" class="form-control">
+
+          </textarea>
+          </textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+      </form>
+    </div>
+    <%- include('./partials/script') %>
+  </body>
+</html>

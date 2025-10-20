@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title>HomePage</title>
+    <style>
+      body {
+        padding-top: 75px; /* Adjust if navbar height changes */
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="container my-5">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+            <!-- Blog Image -->
+            <img
+              src="<%= blog.coverImageURL %>"
+              class="card-img-top"
+              alt="Blog Image"
+              style="height: 350px; object-fit: cover"
+            />
+
+            <div class="card-body p-5">
+              <!-- Blog Title -->
+              <h2 class="card-title text-center fw-bold text-primary mb-4">
+                <%= blog.title %>
+              </h2>
+
+              <!-- Divider -->
+              <hr class="w-25 mx-auto mb-4 border-2 border-primary" />
+
+              <!-- Blog Body -->
+              <p
+                class="card-text fs-5 text-secondary"
+                style="line-height: 1.8; text-align: justify"
+              >
+                <%= blog.body %>
+              </p>
+
+              <!-- Back Button -->
+              <div class="text-center mt-5">
+                <a
+                  href="/"
+                  class="btn btn-outline-primary px-4 py-2 rounded-pill"
+                >
+                  ← Back to Blogs
+                </a>
+              </div>
+              <!-- Commented User Info -->
+              <div class="container mt-4 d-flex align-items-center gap-3">
+                <img
+                  src="<%= blog.createdBy.profileImageUrl %>"
+                  alt="User Profile"
+                  width="60"
+                  height="60"
+                  class="rounded-circle border border-2 border-primary shadow-sm"
+                />
+                <div>
+                  <h6 class="mb-0 fw-semibold text-dark">
+                    <%= blog.createdBy.fullName %>
+                  </h6>
+                  <small class="text-muted">Author</small>
+                </div>
+              </div>
+              <% if (locals.user) { %> <% } %>
+
+              <div>
+                <h5 class="fw-bold text-primary mb-4">
+                  Comments (<%= comments.length %>)
+                </h5>
+                <div class="container">
+                  <form action="/blog/comment/<%= blog._id %>" method="post">
+                    <div class="form-group mt-4">
+                      <input
+                        name="content"
+                        type="text"
+                        class="form-control"
+                        id="content"
+                        aria-describedby="content"
+                        placeholder="Add a comment..."
+                      />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-4">
+                      Add
+                    </button>
+                  </form>
+                  <!-- Comments Display -->
+                  <div class="mt-5">
+                    <% if (comments && comments.length > 0) { %> <%
+                    comments.forEach(comment => { %>
+                    <div
+                      class="d-flex align-items-start gap-3 mb-4 p-3 bg-light rounded-3 shadow-sm"
+                    >
+                      <!-- User Profile Image -->
+                      <img
+                        src="<%= comment.createdBy?.profileImageUrl || '/default-user.png' %>"
+                        alt="User Profile"
+                        width="55"
+                        height="55"
+                        class="rounded-circle border border-2 border-primary shadow-sm"
+                      />
+
+                      <!-- Comment Content -->
+                      <div class="flex-grow-1">
+                        <h6 class="mb-1 fw-semibold text-dark">
+                          <%= comment.createdBy?.fullName || 'Anonymous' %>
+                        </h6>
+                        <p
+                          class="mb-0 text-secondary"
+                          style="white-space: pre-wrap"
+                        >
+                          <%= comment.content %>
+                        </p>
+                      </div>
+                    </div>
+                    <% }) %> <% } else { %>
+                    <p class="text-muted fst-italic">
+                      No comments yet. Be the first to share your thoughts!
+                    </p>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%- include('./partials/script') %>
+  </body>
+</html>
