@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <%- include('./partials/head') %>
@@ -51,4 +51,90 @@
     </div>
     <%- include('./partials/script') %>
   </body>
+</html> -->
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('./partials/head') %>
+    <title>Add New Blog</title>
+    <style>
+      body {
+        padding-top: 75px;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/nav') %>
+
+    <div class="container mt-3">
+      <form id="blogForm">
+        <div class="form-group mt-4">
+          <label for="coverImage">Cover image</label>
+          <input
+            name="coverImageURL"
+            type="file"
+            class="form-control"
+            id="cover"
+            placeholder="coverImageURL"
+          />
+        </div>
+        <div class="form-group mb-3 mt-3">
+          <label for="title">Title</label>
+          <input
+            name="title"
+            type="text"
+            class="form-control"
+            id="title"
+            placeholder="Enter title of Blog"
+          />
+        </div>
+        <div class="form-group mt-4">
+          <label for="body">Body</label>
+          <textarea name="body" id="body" class="form-control"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+      </form>
+    </div>
+
+    <%- include('./partials/script') %>
+
+    <script type="module">
+      import { put } from "https://esm.sh/@vercel/blob";
+
+      const form = document.getElementById("blogForm");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById("title").value;
+        const body = document.getElementById("body").value;
+        let coverImageURL = null;
+
+        const fileInput = document.getElementById("cover");
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const blob = await put(`uploads/${Date.now()}-${file.name}`, file, {
+            access: "public",
+          });
+          coverImageURL = blob.url;
+        }
+
+        // Send blog data to backend as JSON
+        await fetch("/blog", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, body, coverImageURL }),
+        });
+
+        // Redirect after success
+        window.location.href = "/";
+      });
+    </script>
+  </body>
 </html>
+

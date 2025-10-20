@@ -145,30 +145,25 @@
 
 
 
-
 require("dotenv").config();
 
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
-const fileUpload = require("express-fileupload");
+const fileUpload = require("express-fileupload"); // still useful for local testing
 
 const userRoute = require("./routes/user");
 const blogRoute = require("./routes/blog");
 const Blog = require("./models/blog");
-const {
-  checkForAuthenticationCookie,
-} = require("./middlewares/authentication");
+const { checkForAuthenticationCookie } = require("./middlewares/authentication");
 
 const app = express();
 
 // Use PORT from environment (Vercel) or fallback to 8000
 const PORT = process.env.PORT || 8000;
 
-// Use MongoDB Atlas URL from environment
-const MONGO_URL = process.env.MONGO_URL;
-
+// MongoDB connection
 let cachedConnection = null;
 
 async function connectToMongoDB() {
@@ -186,7 +181,7 @@ async function connectToMongoDB() {
   }
 }
 
-// Wrap the DB connection in an async IIFE to allow await in CommonJS
+// Connect to MongoDB
 (async () => {
   try {
     await connectToMongoDB();
@@ -195,33 +190,31 @@ async function connectToMongoDB() {
   }
 })();
 
-app.use(fileUpload());
-app.set("view engine", "ejs");
-app.set("views", path.resolve("./views"));
-
-app.use(express.urlencoded({ extended: false }));
+// Middlewares
+app.use(fileUpload()); // optional for local uploads
+app.use(express.json()); // parse JSON (needed for Blob uploads)
+app.use(express.urlencoded({ extended: false })); // parse form data
 app.use(cookieParser());
 app.use(checkForAuthenticationCookie("token"));
 app.use(express.static(path.resolve("./public")));
 
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"));
+
 // Routes
 app.get("/", async (req, res) => {
   const allBlogs = await Blog.find({});
-  res.render("home", {
-    user: req.user,
-    blogs: allBlogs,
-  });
+  res.render("home", { user: req.user, blogs: allBlogs });
 });
 
 app.use("/user", userRoute);
 app.use("/blog", blogRoute);
 
-// Error handling middleware
+// Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something broke!");
 });
 
-// app.listen(PORT, () => console.log(`Server is listening at port ${PORT}`));
-
+// Vercel Serverless export
 module.exports = app;

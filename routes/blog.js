@@ -142,16 +142,10 @@ router.post("/comment/:blogId", async (req, res) => {
 
 // Create a new blog post (with optional image upload)
 router.post("/", async (req, res) => {
-  const { title, body } = req.body;
-  let coverImageURL = null;
+  const { title, body, coverImageURL } = req.body;
+  
 
-  if (req.files && req.files.coverImageURL) {
-    const file = req.files.coverImageURL;
-    const blob = await put(`uploads/${Date.now()}-${file.name}`, file.data, {
-      access: "public",
-    });
-    coverImageURL = blob.url;
-  }
+  
 
   const blog = await Blog.create({
     title,
